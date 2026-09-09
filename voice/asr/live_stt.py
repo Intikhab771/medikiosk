@@ -3,51 +3,31 @@ import time
 
 import numpy as np
 import sounddevice as sd
-import torch
-from transformers import AutoModel
+
+from .model import ASRService
 
 
 # ============================================================
 # CONFIGURATION
 # ============================================================
 
-MODEL_NAME = "ai4bharat/indic-conformer-600m-multilingual"
-
 SAMPLE_RATE = 16000
 
-# Microphone block size
 BLOCK_DURATION = 0.25
 BLOCK_SIZE = int(SAMPLE_RATE * BLOCK_DURATION)
 
-# How long silence must last before transcription
 SILENCE_DURATION = 0.8
 
-# Ignore extremely short sounds
 MIN_SPEECH_DURATION = 0.5
 
-# Maximum length of one utterance
 MAX_SPEECH_DURATION = 15.0
 
 
 # ============================================================
-# LOAD MODEL
+# LOAD ASR SERVICE
 # ============================================================
 
-print("Loading IndicConformer...")
-
-model = AutoModel.from_pretrained(
-    MODEL_NAME,
-    trust_remote_code=True
-)
-
-device = "cuda" if torch.cuda.is_available() else "cpu"
-
-print(f"Using device: {device}")
-
-model = model.to(device)
-model.eval()
-
-print("Model loaded.\n")
+asr = ASRService(language="hi")
 
 
 # ============================================================
@@ -75,35 +55,6 @@ def get_rms(audio):
 
 
 # ============================================================
-# TRANSCRIBE
-# ============================================================
-
-def transcribe(audio):
-
-    # Flatten
-    audio = audio.flatten()
-
-    # Convert NumPy → PyTorch
-    audio_tensor = torch.from_numpy(audio).float()
-
-    # [samples] → [1, samples]
-    audio_tensor = audio_tensor.unsqueeze(0)
-
-    # Move to device
-    audio_tensor = audio_tensor.to(device)
-
-    with torch.inference_mode():
-
-        text = model(
-            audio_tensor,
-            "hi",
-            "ctc"
-        )
-
-    return text
-
-
-# ============================================================
 # CALIBRATE MICROPHONE
 # ============================================================
 
@@ -128,7 +79,6 @@ def calibrate_noise():
 
     noise_floor = float(np.median(levels))
 
-    # Speech threshold is several times above background noise.
     threshold = max(noise_floor * 3.0, 0.003)
 
     print(f"Noise floor: {noise_floor:.6f}")
@@ -190,17 +140,6 @@ try:
             rms = get_rms(samples)
 
             # ------------------------------------------------
-            # DEBUG LEVEL
-            # ------------------------------------------------
-
-            # Uncomment this if you want to see microphone level.
-            #
-            # print(
-            #     f"\rMic: {rms:.5f} | Threshold: {threshold:.5f}",
-            #     end=""
-            # )
-
-            # ------------------------------------------------
             # SPEECH
             # ------------------------------------------------
 
@@ -208,7 +147,7 @@ try:
 
                 if not speech_started:
 
-                    print("🎙 Speech detected...")
+                    print("Speech detected...")
 
                     speech_started = True
 
@@ -221,7 +160,6 @@ try:
 
                 speech_time += BLOCK_DURATION
 
-                # Reset silence timer
                 silence_time = 0.0
 
                 # ------------------------------------------------
@@ -239,7 +177,7 @@ try:
 
                     try:
 
-                        text = transcribe(audio)
+                        text = asr.transcribe(audio)
 
                         elapsed = time.time() - start
 
@@ -257,7 +195,6 @@ try:
                         print("\nTranscription error:")
                         print(e)
 
-                    # Reset
                     speech_buffer = []
                     speech_started = False
                     speech_time = 0.0
@@ -271,8 +208,6 @@ try:
 
                 if speech_started:
 
-                    # Keep the silence block.
-                    # This preserves the end of the sentence.
                     speech_buffer.append(samples)
 
                     silence_time += BLOCK_DURATION
@@ -294,7 +229,7 @@ try:
 
                         try:
 
-                            text = transcribe(audio)
+                            text = asr.transcribe(audio)
 
                             elapsed = time.time() - start
 
@@ -312,7 +247,6 @@ try:
                             print("\nTranscription error:")
                             print(e)
 
-                        # Reset
                         speech_buffer = []
                         speech_started = False
                         speech_time = 0.0
