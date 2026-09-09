@@ -1,5 +1,8 @@
 import queue
 import time
+import json
+import urllib.request
+import urllib.error
 
 import numpy as np
 import sounddevice as sd
@@ -27,7 +30,7 @@ MAX_SPEECH_DURATION = 15.0
 # LOAD ASR SERVICE
 # ============================================================
 
-asr = ASRService(language="hi")
+asr = ASRService(language="as")
 
 
 # ============================================================
@@ -53,6 +56,50 @@ def get_rms(audio):
 
     return float(np.sqrt(np.mean(audio ** 2)))
 
+# ============================================================
+# SEND TRANSCRIPT TO BACKEND
+# ============================================================
+
+BACKEND_URL = "http://127.0.0.1:8000/api/interview/turn"
+
+SESSION_ID = "demo-session-001"
+
+
+def send_to_backend(transcript):
+
+    payload = {
+        "session_id": SESSION_ID,
+        "language": asr.language,
+        "transcript": transcript
+    }
+
+    data = json.dumps(payload).encode("utf-8")
+
+    request = urllib.request.Request(
+        BACKEND_URL,
+        data=data,
+        headers={
+            "Content-Type": "application/json"
+        },
+        method="POST"
+    )
+
+    try:
+
+        with urllib.request.urlopen(request, timeout=120) as response:
+
+            result = json.loads(
+                response.read().decode("utf-8")
+            )
+
+            return result
+
+    except urllib.error.URLError as e:
+
+        print("\nBackend connection error:")
+        print(e)
+
+        return None
 
 # ============================================================
 # CALIBRATE MICROPHONE
@@ -96,7 +143,7 @@ print("========================================")
 print("       MediKiosk Live Speech-to-Text")
 print("========================================")
 print()
-print("Language: Hindi")
+print("Language: Assamese")
 print("Press Ctrl+C to stop.")
 print()
 
@@ -186,7 +233,28 @@ try:
                         print(text)
 
                         print()
-                        print(f"Processing time: {elapsed:.2f}s")
+                        print(f"ASR processing time: {elapsed:.2f}s")
+
+                        # ------------------------------------------------
+                        # SEND TRANSCRIPT TO BACKEND
+                        # ------------------------------------------------
+
+                        print("Sending transcript to backend...")
+
+                        result = send_to_backend(text)
+
+                        if result:
+
+                            print()
+                            print("Clinical data:")
+                            print(
+                                json.dumps(
+                                    result["clinical_data"],
+                                    ensure_ascii=False,
+                                    indent=2
+                                )
+                            )
+
                         print("----------------------------------------")
                         print("Listening...\n")
 
@@ -238,7 +306,28 @@ try:
                             print(text)
 
                             print()
-                            print(f"Processing time: {elapsed:.2f}s")
+                            print(f"ASR processing time: {elapsed:.2f}s")
+
+                            # ------------------------------------------------
+                            # SEND TRANSCRIPT TO BACKEND
+                            # ------------------------------------------------
+
+                            print("Sending transcript to backend...")
+
+                            result = send_to_backend(text)
+
+                            if result:
+
+                                print()
+                                print("Clinical data:")
+                                print(
+                                    json.dumps(
+                                        result["clinical_data"],
+                                        ensure_ascii=False,
+                                        indent=2
+                                    )
+                                )
+
                             print("----------------------------------------")
                             print("Listening...\n")
 
