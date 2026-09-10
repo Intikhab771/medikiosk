@@ -1,0 +1,305 @@
+{
+  "schema_version": "0.1.0",
+  "purpose": "General patient-reported history intake for clinician review. This schema does not diagnose, prescribe, or replace emergency or professional care.",
+  "design_notes": {
+    "chief_concern": "Record the patient's main concern in their own words before assigning a category.",
+    "unknown_values": "Use null for an unanswered single-value field and [] for an unanswered list field. Never infer a value from silence.",
+    "safety": "Urgent-warning decisions belong in separately reviewed red-flag rules, not this file.",
+    "privacy": "Store only the minimum health information required for the interview; direct identifiers belong elsewhere."
+  },
+  "answer_types": {
+    "free_text": "An unrestricted typed or spoken answer.",
+    "integer": "A whole number within a validation range.",
+    "scale": "A number on a supplied scale.",
+    "yes_no_unknown": "Yes, no, or unknown/not sure.",
+    "single_choice": "One option from a list.",
+    "multiple_choice": "One or more options from a list.",
+    "structured_list": "A repeatable list of records, such as medicines."
+  },
+  "shared_parameters": [
+    {
+      "id": "preferred_language",
+      "label": "Preferred language",
+      "section": "patient_context",
+      "answer_type": "free_text",
+      "required": false,
+      "priority": "routine",
+      "applies_to": ["all"]
+    },
+    {
+      "id": "age_years",
+      "label": "Age in years",
+      "section": "patient_context",
+      "answer_type": "integer",
+      "validation": { "minimum": 0, "maximum": 130 },
+      "required": false,
+      "priority": "routine",
+      "applies_to": ["all"]
+    },
+    {
+      "id": "chief_concern_verbatim",
+      "label": "Main concern in the patient's own words",
+      "section": "reason_for_visit",
+      "answer_type": "free_text",
+      "required": true,
+      "priority": "high",
+      "applies_to": ["all"]
+    },
+    {
+      "id": "primary_complaint_category",
+      "label": "Main complaint category",
+      "section": "reason_for_visit",
+      "answer_type": "single_choice",
+      "options_source": "complaint_profiles",
+      "required": true,
+      "priority": "high",
+      "applies_to": ["all"]
+    },
+    {
+      "id": "additional_concerns",
+      "label": "Other concerns the patient wants to discuss",
+      "section": "reason_for_visit",
+      "answer_type": "structured_list",
+      "item_fields": ["description", "related_category"],
+      "required": false,
+      "priority": "routine",
+      "applies_to": ["all"]
+    },
+    {
+      "id": "onset",
+      "label": "When the current concern began",
+      "section": "history_of_present_concern",
+      "answer_type": "free_text",
+      "required": "conditional",
+      "ask_when": "A new or ongoing symptom is reported.",
+      "priority": "high",
+      "applies_to": ["all"]
+    },
+    {
+      "id": "duration",
+      "label": "How long the concern has been present",
+      "section": "history_of_present_concern",
+      "answer_type": "free_text",
+      "required": "conditional",
+      "ask_when": "A new or ongoing symptom is reported.",
+      "priority": "high",
+      "applies_to": ["all"]
+    },
+    {
+      "id": "course",
+      "label": "How the concern has changed over time",
+      "section": "history_of_present_concern",
+      "answer_type": "single_choice",
+      "options": ["getting_better", "getting_worse", "unchanged", "comes_and_goes", "unknown"],
+      "required": "conditional",
+      "ask_when": "A new or ongoing symptom is reported.",
+      "priority": "high",
+      "applies_to": ["all"]
+    },
+    {
+      "id": "frequency_or_pattern",
+      "label": "How often the concern occurs or its pattern",
+      "section": "history_of_present_concern",
+      "answer_type": "free_text",
+      "required": false,
+      "priority": "routine",
+      "applies_to": ["all"]
+    },
+    {
+      "id": "location",
+      "label": "Where the symptom is felt",
+      "section": "history_of_present_concern",
+      "answer_type": "free_text",
+      "required": "conditional",
+      "ask_when": "The concern is a bodily symptom with a location.",
+      "priority": "high",
+      "applies_to": ["all"]
+    },
+    {
+      "id": "symptom_quality",
+      "label": "How the patient describes the symptom",
+      "section": "history_of_present_concern",
+      "answer_type": "free_text",
+      "required": false,
+      "priority": "routine",
+      "applies_to": ["all"]
+    },
+    {
+      "id": "severity_0_to_10",
+      "label": "Severity from 0 to 10",
+      "section": "history_of_present_concern",
+      "answer_type": "scale",
+      "validation": { "minimum": 0, "maximum": 10 },
+      "required": "conditional",
+      "ask_when": "The patient reports pain, discomfort, breathlessness, or another symptom they can rate.",
+      "priority": "high",
+      "applies_to": ["all"]
+    },
+    {
+      "id": "aggravating_factors",
+      "label": "What makes the concern worse",
+      "section": "history_of_present_concern",
+      "answer_type": "multiple_choice",
+      "options": ["activity", "movement", "food_or_drink", "position", "breathing", "stress", "other", "nothing_noticed", "unknown"],
+      "required": false,
+      "priority": "routine",
+      "applies_to": ["all"]
+    },
+    {
+      "id": "relieving_factors",
+      "label": "What makes the concern better",
+      "section": "history_of_present_concern",
+      "answer_type": "multiple_choice",
+      "options": ["rest", "movement", "food_or_drink", "position", "medicine", "other", "nothing_noticed", "unknown"],
+      "required": false,
+      "priority": "routine",
+      "applies_to": ["all"]
+    },
+    {
+      "id": "associated_symptoms",
+      "label": "Other symptoms occurring with the main concern",
+      "section": "history_of_present_concern",
+      "answer_type": "structured_list",
+      "item_fields": ["symptom", "onset_or_timing", "severity_if_known"],
+      "required": false,
+      "priority": "high",
+      "applies_to": ["all"]
+    },
+    {
+      "id": "similar_previous_episode",
+      "label": "Whether this has happened before",
+      "section": "history_of_present_concern",
+      "answer_type": "yes_no_unknown",
+      "required": false,
+      "priority": "routine",
+      "applies_to": ["all"]
+    },
+    {
+      "id": "impact_on_daily_life",
+      "label": "How the concern affects sleep, work, movement, eating, or normal activities",
+      "section": "history_of_present_concern",
+      "answer_type": "free_text",
+      "required": false,
+      "priority": "routine",
+      "applies_to": ["all"]
+    },
+    {
+      "id": "past_medical_history",
+      "label": "Past and current medical conditions",
+      "section": "health_background",
+      "answer_type": "structured_list",
+      "item_fields": ["condition", "diagnosed_when_if_known", "current_status"],
+      "required": false,
+      "priority": "high",
+      "applies_to": ["all"]
+    },
+    {
+      "id": "past_surgical_history",
+      "label": "Previous operations or procedures",
+      "section": "health_background",
+      "answer_type": "structured_list",
+      "item_fields": ["procedure", "approximate_date", "reason_if_known"],
+      "required": false,
+      "priority": "routine",
+      "applies_to": ["all"]
+    },
+    {
+      "id": "current_medications_and_supplements",
+      "label": "Current medicines and supplements",
+      "section": "health_background",
+      "answer_type": "structured_list",
+      "item_fields": ["name", "dose_if_known", "frequency_if_known", "reason_if_known"],
+      "required": false,
+      "priority": "high",
+      "applies_to": ["all"]
+    },
+    {
+      "id": "allergies_and_reactions",
+      "label": "Allergies and past reactions",
+      "section": "health_background",
+      "answer_type": "structured_list",
+      "item_fields": ["substance", "reaction", "severity_if_known"],
+      "required": false,
+      "priority": "high",
+      "applies_to": ["all"]
+    },
+    {
+      "id": "family_history_relevant",
+      "label": "Relevant illnesses in close family members",
+      "section": "health_background",
+      "answer_type": "structured_list",
+      "item_fields": ["relationship", "condition", "age_at_diagnosis_if_known"],
+      "required": false,
+      "priority": "routine",
+      "applies_to": ["all"]
+    },
+    {
+      "id": "lifestyle_and_exposure_context",
+      "label": "Relevant lifestyle, work, travel, or exposure information",
+      "section": "health_background",
+      "answer_type": "free_text",
+      "required": false,
+      "priority": "routine",
+      "applies_to": ["all"]
+    },
+    {
+      "id": "recent_tests_or_documents",
+      "label": "Recent tests, reports, or health documents the patient knows about",
+      "section": "health_background",
+      "answer_type": "structured_list",
+      "item_fields": ["test_or_document", "date_if_known", "result_summary_if_known"],
+      "required": false,
+      "priority": "routine",
+      "applies_to": ["all"]
+    }
+  ],
+  "complaint_profiles": {
+    "general_health_concern": { "label": "General health concern or follow-up", "additional_parameter_ids": ["patient_goal_for_visit", "recent_care_or_treatment"] },
+    "chest_symptoms": { "label": "Chest symptoms", "additional_parameter_ids": ["radiation", "shortness_of_breath", "palpitations", "sweating_with_symptom", "relation_to_exertion"] },
+    "abdominal_symptoms": { "label": "Abdominal or digestive symptoms", "additional_parameter_ids": ["abdominal_location_detail", "nausea_or_vomiting", "bowel_changes", "appetite_or_food_tolerance", "urinary_symptoms_present"] },
+    "respiratory_symptoms": { "label": "Respiratory symptoms", "additional_parameter_ids": ["cough_character", "sputum_description", "fever_or_chills", "breathlessness_context", "sick_or_environmental_exposures"] },
+    "headache_or_neurological_symptoms": { "label": "Headache or neurological symptoms", "additional_parameter_ids": ["headache_pattern", "vision_changes", "weakness_or_numbness", "speech_or_balance_changes", "recent_head_injury"] },
+    "urinary_or_reproductive_symptoms": { "label": "Urinary or reproductive symptoms", "additional_parameter_ids": ["pain_with_urination", "urinary_frequency_or_urgency", "blood_in_urine", "flank_or_pelvic_pain", "pregnancy_possibility_if_relevant"] },
+    "skin_symptoms": { "label": "Skin symptoms", "additional_parameter_ids": ["skin_location", "skin_appearance", "itch_or_pain", "new_exposures", "spread_or_change_over_time"] },
+    "mental_wellbeing_concern": { "label": "Mental wellbeing concern", "additional_parameter_ids": ["mood_concern", "sleep_change", "appetite_or_energy_change", "daily_functioning_change", "current_supports"] }
+  },
+  "complaint_specific_parameters": [
+    { "id": "patient_goal_for_visit", "label": "What the patient hopes to discuss or achieve today", "answer_type": "free_text", "applies_to": ["general_health_concern"] },
+    { "id": "recent_care_or_treatment", "label": "Recent care, treatment, or advice for this concern", "answer_type": "free_text", "applies_to": ["general_health_concern"] },
+    { "id": "radiation", "label": "Whether chest discomfort spreads elsewhere", "answer_type": "free_text", "applies_to": ["chest_symptoms"] },
+    { "id": "shortness_of_breath", "label": "Shortness of breath with the concern", "answer_type": "yes_no_unknown", "applies_to": ["chest_symptoms"] },
+    { "id": "palpitations", "label": "Racing, pounding, or irregular heartbeat", "answer_type": "yes_no_unknown", "applies_to": ["chest_symptoms"] },
+    { "id": "sweating_with_symptom", "label": "Sweating with the concern", "answer_type": "yes_no_unknown", "applies_to": ["chest_symptoms"] },
+    { "id": "relation_to_exertion", "label": "Whether activity changes the symptom", "answer_type": "yes_no_unknown", "applies_to": ["chest_symptoms"] },
+    { "id": "abdominal_location_detail", "label": "Exact abdominal area affected", "answer_type": "free_text", "applies_to": ["abdominal_symptoms"] },
+    { "id": "nausea_or_vomiting", "label": "Nausea or vomiting", "answer_type": "yes_no_unknown", "applies_to": ["abdominal_symptoms"] },
+    { "id": "bowel_changes", "label": "Changes in bowel habit or stool", "answer_type": "free_text", "applies_to": ["abdominal_symptoms"] },
+    { "id": "appetite_or_food_tolerance", "label": "Appetite or ability to eat and drink", "answer_type": "free_text", "applies_to": ["abdominal_symptoms"] },
+    { "id": "urinary_symptoms_present", "label": "Urinary symptoms occurring with abdominal symptoms", "answer_type": "yes_no_unknown", "applies_to": ["abdominal_symptoms"] },
+    { "id": "cough_character", "label": "Cough description", "answer_type": "free_text", "applies_to": ["respiratory_symptoms"] },
+    { "id": "sputum_description", "label": "Mucus or phlegm description", "answer_type": "free_text", "applies_to": ["respiratory_symptoms"] },
+    { "id": "fever_or_chills", "label": "Fever or chills", "answer_type": "yes_no_unknown", "applies_to": ["respiratory_symptoms"] },
+    { "id": "breathlessness_context", "label": "When breathlessness occurs", "answer_type": "free_text", "applies_to": ["respiratory_symptoms"] },
+    { "id": "sick_or_environmental_exposures", "label": "Recent sick contacts or relevant environmental exposures", "answer_type": "free_text", "applies_to": ["respiratory_symptoms"] },
+    { "id": "headache_pattern", "label": "Headache pattern and location", "answer_type": "free_text", "applies_to": ["headache_or_neurological_symptoms"] },
+    { "id": "vision_changes", "label": "Vision changes", "answer_type": "yes_no_unknown", "applies_to": ["headache_or_neurological_symptoms"] },
+    { "id": "weakness_or_numbness", "label": "Weakness or numbness", "answer_type": "yes_no_unknown", "applies_to": ["headache_or_neurological_symptoms"] },
+    { "id": "speech_or_balance_changes", "label": "Speech or balance changes", "answer_type": "yes_no_unknown", "applies_to": ["headache_or_neurological_symptoms"] },
+    { "id": "recent_head_injury", "label": "Recent head injury", "answer_type": "yes_no_unknown", "applies_to": ["headache_or_neurological_symptoms"] },
+    { "id": "pain_with_urination", "label": "Pain or burning with urination", "answer_type": "yes_no_unknown", "applies_to": ["urinary_or_reproductive_symptoms"] },
+    { "id": "urinary_frequency_or_urgency", "label": "Urinary frequency or urgency", "answer_type": "yes_no_unknown", "applies_to": ["urinary_or_reproductive_symptoms"] },
+    { "id": "blood_in_urine", "label": "Blood noticed in urine", "answer_type": "yes_no_unknown", "applies_to": ["urinary_or_reproductive_symptoms"] },
+    { "id": "flank_or_pelvic_pain", "label": "Flank or pelvic pain", "answer_type": "yes_no_unknown", "applies_to": ["urinary_or_reproductive_symptoms"] },
+    { "id": "pregnancy_possibility_if_relevant", "label": "Possibility of pregnancy when relevant", "answer_type": "yes_no_unknown", "applies_to": ["urinary_or_reproductive_symptoms"] },
+    { "id": "skin_location", "label": "Location of the skin concern", "answer_type": "free_text", "applies_to": ["skin_symptoms"] },
+    { "id": "skin_appearance", "label": "Appearance of the skin concern", "answer_type": "free_text", "applies_to": ["skin_symptoms"] },
+    { "id": "itch_or_pain", "label": "Itching or pain", "answer_type": "free_text", "applies_to": ["skin_symptoms"] },
+    { "id": "new_exposures", "label": "New products, medicines, foods, animals, or other exposures", "answer_type": "free_text", "applies_to": ["skin_symptoms"] },
+    { "id": "spread_or_change_over_time", "label": "Whether the concern is spreading or changing", "answer_type": "free_text", "applies_to": ["skin_symptoms"] },
+    { "id": "mood_concern", "label": "Main mood or wellbeing concern", "answer_type": "free_text", "applies_to": ["mental_wellbeing_concern"] },
+    { "id": "sleep_change", "label": "Changes in sleep", "answer_type": "free_text", "applies_to": ["mental_wellbeing_concern"] },
+    { "id": "appetite_or_energy_change", "label": "Changes in appetite or energy", "answer_type": "free_text", "applies_to": ["mental_wellbeing_concern"] },
+    { "id": "daily_functioning_change", "label": "Changes in work, school, relationships, or daily functioning", "answer_type": "free_text", "applies_to": ["mental_wellbeing_concern"] },
+    { "id": "current_supports", "label": "Current support from people or services", "answer_type": "free_text", "applies_to": ["mental_wellbeing_concern"] }
+  ]
+}
