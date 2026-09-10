@@ -1,0 +1,12 @@
+# Secret API Keys
+.env
+
+# Python cache and temporary files
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# OS / Editor specific
+.vscode/
+.idea/
+Thumbs.db
