@@ -1,32 +1,32 @@
+from typing import Any
+
 from fastapi import FastAPI
 from pydantic import BaseModel
 
-from backend.clinical.extractor import ClinicalExtractor
-from backend.clinical.normalizer import ClinicalNormalizer
-
 
 app = FastAPI(title="MediKiosk Backend")
-
-extractor = ClinicalExtractor()
-normalizer = ClinicalNormalizer()
 
 
 class InterviewTurn(BaseModel):
     session_id: str
     language: str
+    question_id: str
     transcript: str
+    structured_answer: Any
+
+
+@app.get("/health")
+def health():
+    return {"status": "ok"}
 
 
 @app.post("/api/interview/turn")
 def interview_turn(turn: InterviewTurn):
-
-    extraction = extractor.extract(turn.transcript)
-
-    normalized = normalizer.normalize(extraction)
-
     return {
+        "received": True,
         "session_id": turn.session_id,
         "language": turn.language,
+        "question_id": turn.question_id,
         "transcript": turn.transcript,
-        "clinical_data": normalized.model_dump()
+        "structured_answer": turn.structured_answer,
     }
