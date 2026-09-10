@@ -1,0 +1,1730 @@
+{
+  "schema_version": "0.1.0",
+  "status": "prototype_only",
+  "purpose": "An approved-question menu for a general patient-history prototype. It collects patient-reported information; it does not diagnose or replace professional, emergency, or clinician-led assessment.",
+  "selection_rules": [
+    "Ask the opening group first.",
+    "Ask only one complaint flow per primary concern in this prototype.",
+    "Use shared symptom questions only when the required information was not already captured.",
+    "Do not let an AI invent a question or a red-flag action; it may only rank questions already in this bank.",
+    "Stop or escalate only through separately validated clinical safety rules."
+  ],
+  "shared_question_groups": [
+    {
+      "id": "opening",
+      "when_to_ask": "At the start, before collecting health history.",
+      "questions": [
+        {
+          "id": "CORE_001",
+          "text": "Do you agree to share this information for this prototype health interview?",
+          "parameter": "consent_to_history_intake",
+          "answer_type": "yes_no_unknown",
+          "required": true,
+          "stage": "opening",
+          "ask_when": "always",
+          "applies_to": [
+            "all"
+          ],
+          "clinical_review_status": "requires_clinical_review",
+          "options": [
+            "yes",
+            "no"
+          ],
+          "priority": 1
+        },
+        {
+          "id": "CORE_002",
+          "text": "How old are you?",
+          "parameter": "age_years",
+          "answer_type": "integer",
+          "required": false,
+          "stage": "opening",
+          "ask_when": "always",
+          "applies_to": [
+            "all"
+          ],
+          "clinical_review_status": "requires_clinical_review",
+          "priority": 3
+        },
+        {
+          "id": "CORE_003",
+          "text": "What is the main health concern you would like to discuss today?",
+          "parameter": "chief_concern_verbatim",
+          "answer_type": "free_text",
+          "required": true,
+          "stage": "opening",
+          "ask_when": "always",
+          "applies_to": [
+            "all"
+          ],
+          "clinical_review_status": "requires_clinical_review",
+          "priority": 2
+        },
+        {
+          "id": "CORE_004",
+          "text": "Is there anything else you would like us to know about today?",
+          "parameter": "additional_concerns",
+          "answer_type": "free_text",
+          "required": false,
+          "stage": "opening",
+          "ask_when": "always",
+          "applies_to": [
+            "all"
+          ],
+          "clinical_review_status": "requires_clinical_review",
+          "priority": 4
+        }
+      ]
+    },
+    {
+      "id": "shared_symptom_history",
+      "when_to_ask": "After a complaint is selected, unless the answer is already captured by a complaint-specific question.",
+      "questions": [
+        {
+          "id": "CORE_005",
+          "text": "When did this concern first start?",
+          "parameter": "onset",
+          "answer_type": "free_text",
+          "required": true,
+          "stage": "shared_symptom_history",
+          "ask_when": "always",
+          "applies_to": [
+            "all"
+          ],
+          "clinical_review_status": "requires_clinical_review"
+        },
+        {
+          "id": "CORE_006",
+          "text": "How long has it been going on?",
+          "parameter": "duration",
+          "answer_type": "free_text",
+          "required": true,
+          "stage": "shared_symptom_history",
+          "ask_when": "always",
+          "applies_to": [
+            "all"
+          ],
+          "clinical_review_status": "requires_clinical_review"
+        },
+        {
+          "id": "CORE_007",
+          "text": "Since it started, is it getting better, getting worse, staying the same, or coming and going?",
+          "parameter": "course",
+          "answer_type": "single_choice",
+          "required": true,
+          "stage": "shared_symptom_history",
+          "ask_when": "always",
+          "applies_to": [
+            "all"
+          ],
+          "clinical_review_status": "requires_clinical_review",
+          "options": [
+            "getting_better",
+            "getting_worse",
+            "unchanged",
+            "comes_and_goes",
+            "not_sure"
+          ]
+        },
+        {
+          "id": "CORE_008",
+          "text": "On a scale from 0 to 10, how severe is it right now?",
+          "parameter": "severity_0_to_10",
+          "answer_type": "scale",
+          "required": false,
+          "stage": "shared_symptom_history",
+          "ask_when": "always",
+          "applies_to": [
+            "all"
+          ],
+          "clinical_review_status": "requires_clinical_review",
+          "options": [
+            "0",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "10"
+          ]
+        },
+        {
+          "id": "CORE_009",
+          "text": "Where exactly do you feel the symptom?",
+          "parameter": "location",
+          "answer_type": "free_text",
+          "required": false,
+          "stage": "shared_symptom_history",
+          "ask_when": "Ask for bodily symptoms with a location.",
+          "applies_to": [
+            "all"
+          ],
+          "clinical_review_status": "requires_clinical_review"
+        },
+        {
+          "id": "CORE_010",
+          "text": "What makes it better or worse, if anything?",
+          "parameter": "modifying_factors",
+          "answer_type": "free_text",
+          "required": false,
+          "stage": "shared_symptom_history",
+          "ask_when": "always",
+          "applies_to": [
+            "all"
+          ],
+          "clinical_review_status": "requires_clinical_review"
+        },
+        {
+          "id": "CORE_011",
+          "text": "Have you had anything like this before?",
+          "parameter": "similar_previous_episode",
+          "answer_type": "yes_no_unknown",
+          "required": false,
+          "stage": "shared_symptom_history",
+          "ask_when": "always",
+          "applies_to": [
+            "all"
+          ],
+          "clinical_review_status": "requires_clinical_review",
+          "options": [
+            "yes",
+            "no",
+            "not_sure"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "health_background",
+      "when_to_ask": "After the complaint flow, unless a red-flag pathway requires the interview to stop.",
+      "questions": [
+        {
+          "id": "CORE_012",
+          "text": "Do you have any medication, food, or other allergies? What reaction did you have?",
+          "parameter": "allergies_and_reactions",
+          "answer_type": "structured_list",
+          "required": false,
+          "stage": "health_background",
+          "ask_when": "always",
+          "applies_to": [
+            "all"
+          ],
+          "clinical_review_status": "requires_clinical_review",
+          "item_fields": [
+            "substance",
+            "reaction",
+            "severity_if_known"
+          ]
+        },
+        {
+          "id": "CORE_013",
+          "text": "What medicines, vitamins, or supplements do you take?",
+          "parameter": "current_medications_and_supplements",
+          "answer_type": "structured_list",
+          "required": false,
+          "stage": "health_background",
+          "ask_when": "always",
+          "applies_to": [
+            "all"
+          ],
+          "clinical_review_status": "requires_clinical_review",
+          "item_fields": [
+            "name",
+            "dose_if_known",
+            "frequency_if_known"
+          ]
+        },
+        {
+          "id": "CORE_014",
+          "text": "Do you have any past or current medical conditions, operations, or recent hospital visits that may be relevant?",
+          "parameter": "past_medical_history",
+          "answer_type": "free_text",
+          "required": false,
+          "stage": "health_background",
+          "ask_when": "always",
+          "applies_to": [
+            "all"
+          ],
+          "clinical_review_status": "requires_clinical_review"
+        },
+        {
+          "id": "CORE_015",
+          "text": "Is there any other information you think the clinician should know?",
+          "parameter": "additional_patient_notes",
+          "answer_type": "free_text",
+          "required": false,
+          "stage": "health_background",
+          "ask_when": "always",
+          "applies_to": [
+            "all"
+          ],
+          "clinical_review_status": "requires_clinical_review"
+        }
+      ]
+    }
+  ],
+  "complaint_flows": [
+    {
+      "complaint_id": "chest_pain",
+      "complaint_name": "Chest Pain",
+      "parameters_covered": [
+        "symptom_radiation",
+        "symptom_radiation_location",
+        "symptom_character",
+        "symptom_aggravating_factors",
+        "associated_symptom_autonomic",
+        "associated_symptom_dyspnea"
+      ],
+      "clinical_review_status": "requires_clinical_review",
+      "questions": [
+        {
+          "id": "CP_001",
+          "text": "Does the pain spread to your arm, shoulder, back, neck, or jaw?",
+          "parameter": "symptom_radiation",
+          "answer_type": "yes_no_unknown",
+          "options": [
+            "yes",
+            "no"
+          ],
+          "priority": 1,
+          "required": true,
+          "stage": "complaint_specific",
+          "ask_when": "always",
+          "applies_to": [
+            "chest_pain"
+          ],
+          "branches": {
+            "yes": "CP_001a",
+            "no": "CP_002"
+          },
+          "red_flag": null,
+          "rationale": "Identifies radiation patterns that may indicate a need for urgent cardiovascular evaluation.",
+          "clinical_review_status": "requires_clinical_review"
+        },
+        {
+          "id": "CP_001a",
+          "text": "Where exactly does the pain spread?",
+          "parameter": "symptom_radiation_location",
+          "answer_type": "multiple_choice",
+          "options": [
+            "Left arm",
+            "Right arm",
+            "Both arms",
+            "Neck/Jaw",
+            "Between shoulder blades",
+            "Belly"
+          ],
+          "priority": 1,
+          "required": false,
+          "stage": "complaint_specific",
+          "ask_when": "CP_001 == 'yes'",
+          "applies_to": [
+            "chest_pain"
+          ],
+          "branches": {
+            "default": "CP_002"
+          },
+          "red_flag": {
+            "is_red_flag": true,
+            "trigger_answers": [
+              "Left arm",
+              "Both arms",
+              "Neck/Jaw",
+              "Between shoulder blades"
+            ],
+            "action": "urgent_triage",
+            "rationale": "Radiation to these areas carries a higher clinical risk and often requires immediate medical assessment.",
+            "clinical_review_status": "requires_clinical_review"
+          },
+          "rationale": "Clarifies radiation locations to differentiate high-risk systemic patterns from localized issues.",
+          "clinical_review_status": "requires_clinical_review"
+        },
+        {
+          "id": "CP_002",
+          "text": "How would you describe the pain?",
+          "parameter": "symptom_character",
+          "answer_type": "single_choice",
+          "options": [
+            "Heavy pressure or squeezing",
+            "Sharp or stabbing",
+            "Burning",
+            "Aching or dull"
+          ],
+          "priority": 1,
+          "required": true,
+          "stage": "complaint_specific",
+          "ask_when": "always",
+          "applies_to": [
+            "chest_pain"
+          ],
+          "branches": {
+            "default": "CP_003"
+          },
+          "red_flag": {
+            "is_red_flag": true,
+            "trigger_answers": [
+              "Heavy pressure or squeezing"
+            ],
+            "action": "urgent_triage",
+            "rationale": "Pressure-like chest pain is a hallmark of severe ischemic risk requiring prompt evaluation.",
+            "clinical_review_status": "requires_clinical_review"
+          },
+          "rationale": "Helps distinguish between potential cardiac, gastrointestinal, and musculoskeletal sources of pain.",
+          "clinical_review_status": "requires_clinical_review"
+        },
+        {
+          "id": "CP_003",
+          "text": "Does the pain get worse when you take a deep breath or cough?",
+          "parameter": "symptom_aggravating_factors",
+          "answer_type": "yes_no_unknown",
+          "options": [
+            "yes",
+            "no"
+          ],
+          "priority": 2,
+          "required": true,
+          "stage": "complaint_specific",
+          "ask_when": "always",
+          "applies_to": [
+            "chest_pain"
+          ],
+          "branches": {
+            "default": "CP_004"
+          },
+          "red_flag": null,
+          "rationale": "Assesses for pleuritic characteristics, which may point toward pulmonary or musculoskeletal involvement.",
+          "clinical_review_status": "requires_clinical_review"
+        },
+        {
+          "id": "CP_004",
+          "text": "Along with the chest pain, are you experiencing severe sweating, nausea, or vomiting?",
+          "parameter": "associated_symptom_autonomic",
+          "answer_type": "yes_no_unknown",
+          "options": [
+            "yes",
+            "no"
+          ],
+          "priority": 1,
+          "required": true,
+          "stage": "complaint_specific",
+          "ask_when": "always",
+          "applies_to": [
+            "chest_pain"
+          ],
+          "branches": {
+            "default": "CP_005"
+          },
+          "red_flag": {
+            "is_red_flag": true,
+            "trigger_answers": [
+              "yes"
+            ],
+            "action": "urgent_triage",
+            "rationale": "Presence of autonomic symptoms with chest pain significantly increases the risk profile for an acute cardiovascular event.",
+            "clinical_review_status": "requires_clinical_review"
+          },
+          "rationale": "Screens for systemic stress responses commonly associated with high-risk cardiopulmonary events.",
+          "clinical_review_status": "requires_clinical_review"
+        },
+        {
+          "id": "CP_005",
+          "text": "Do you feel short of breath along with the chest pain?",
+          "parameter": "associated_symptom_dyspnea",
+          "answer_type": "yes_no_unknown",
+          "options": [
+            "yes",
+            "no"
+          ],
+          "priority": 1,
+          "required": true,
+          "stage": "complaint_specific",
+          "ask_when": "always",
+          "applies_to": [
+            "chest_pain"
+          ],
+          "branches": {
+            "default": "END"
+          },
+          "red_flag": {
+            "is_red_flag": true,
+            "trigger_answers": [
+              "yes"
+            ],
+            "action": "urgent_triage",
+            "rationale": "Concurrent shortness of breath and chest pain represents a critical risk presentation requiring immediate clinical evaluation.",
+            "clinical_review_status": "requires_clinical_review"
+          },
+          "rationale": "Screens for associated respiratory distress or critical cardiopulmonary compromise.",
+          "clinical_review_status": "requires_clinical_review"
+        }
+      ]
+    },
+    {
+      "complaint_id": "breathlessness",
+      "complaint_name": "Breathlessness",
+      "parameters_covered": [
+        "onset_speed",
+        "exertional_relationship",
+        "positional_changes",
+        "associated_symptom_swelling"
+      ],
+      "clinical_review_status": "requires_clinical_review",
+      "questions": [
+        {
+          "id": "SOB_001",
+          "text": "Did your breathing problem start very suddenly (within minutes to hours) or did it come on gradually?",
+          "parameter": "onset_speed",
+          "answer_type": "single_choice",
+          "options": [
+            "Very suddenly",
+            "Gradually over days or weeks"
+          ],
+          "priority": 1,
+          "required": true,
+          "stage": "complaint_specific",
+          "ask_when": "always",
+          "applies_to": [
+            "breathlessness"
+          ],
+          "branches": {
+            "default": "SOB_002"
+          },
+          "red_flag": {
+            "is_red_flag": true,
+            "trigger_answers": [
+              "Very suddenly"
+            ],
+            "action": "urgent_triage",
+            "rationale": "Sudden onset of dyspnea suggests an acute, potentially life-threatening event requiring rapid assessment.",
+            "clinical_review_status": "requires_clinical_review"
+          },
+          "rationale": "Differentiates acute emergency presentations from chronic progressive issues.",
+          "clinical_review_status": "requires_clinical_review"
+        },
+        {
+          "id": "SOB_002",
+          "text": "Does the breathlessness happen while you are resting, or only when you are moving around/exercising?",
+          "parameter": "exertional_relationship",
+          "answer_type": "single_choice",
+          "options": [
+            "Happens even while resting",
+            "Only when moving or exercising"
+          ],
+          "priority": 1,
+          "required": true,
+          "stage": "complaint_specific",
+          "ask_when": "always",
+          "applies_to": [
+            "breathlessness"
+          ],
+          "branches": {
+            "default": "SOB_003"
+          },
+          "red_flag": {
+            "is_red_flag": true,
+            "trigger_answers": [
+              "Happens even while resting"
+            ],
+            "action": "urgent_triage",
+            "rationale": "Breathlessness at rest signifies severe cardiopulmonary compromise.",
+            "clinical_review_status": "requires_clinical_review"
+          },
+          "rationale": "Assesses functional severity and reserve capacity of the cardiopulmonary system.",
+          "clinical_review_status": "requires_clinical_review"
+        },
+        {
+          "id": "SOB_003",
+          "text": "Does your breathing get worse when you lie down flat?",
+          "parameter": "positional_changes",
+          "answer_type": "yes_no_unknown",
+          "options": [
+            "yes",
+            "no"
+          ],
+          "priority": 2,
+          "required": true,
+          "stage": "complaint_specific",
+          "ask_when": "always",
+          "applies_to": [
+            "breathlessness"
+          ],
+          "branches": {
+            "default": "SOB_004"
+          },
+          "red_flag": null,
+          "rationale": "Screens for orthopnea, a key indicator of fluid overload in the pulmonary circulation.",
+          "clinical_review_status": "requires_clinical_review"
+        },
+        {
+          "id": "SOB_004",
+          "text": "Have you noticed any new swelling in your feet, ankles, or legs?",
+          "parameter": "associated_symptom_swelling",
+          "answer_type": "yes_no_unknown",
+          "options": [
+            "yes",
+            "no"
+          ],
+          "priority": 2,
+          "required": true,
+          "stage": "complaint_specific",
+          "ask_when": "always",
+          "applies_to": [
+            "breathlessness"
+          ],
+          "branches": {
+            "default": "END"
+          },
+          "red_flag": null,
+          "rationale": "Evaluates for peripheral edema, indicating potential systemic fluid retention.",
+          "clinical_review_status": "requires_clinical_review"
+        }
+      ]
+    },
+    {
+      "complaint_id": "cough",
+      "complaint_name": "Cough",
+      "parameters_covered": [
+        "cough_type",
+        "sputum_color",
+        "hemoptysis",
+        "associated_symptom_systemic"
+      ],
+      "clinical_review_status": "requires_clinical_review",
+      "questions": [
+        {
+          "id": "CGH_001",
+          "text": "Is your cough dry, or are you coughing up phlegm/mucus?",
+          "parameter": "cough_type",
+          "answer_type": "single_choice",
+          "options": [
+            "Dry",
+            "Coughing up phlegm/mucus"
+          ],
+          "priority": 1,
+          "required": true,
+          "stage": "complaint_specific",
+          "ask_when": "always",
+          "applies_to": [
+            "cough"
+          ],
+          "branches": {
+            "Coughing up phlegm/mucus": "CGH_001a",
+            "Dry": "CGH_002"
+          },
+          "red_flag": null,
+          "rationale": "Classifies the cough to guide further assessment of infectious versus reactive processes.",
+          "clinical_review_status": "requires_clinical_review"
+        },
+        {
+          "id": "CGH_001a",
+          "text": "What color is the phlegm/mucus?",
+          "parameter": "sputum_color",
+          "answer_type": "single_choice",
+          "options": [
+            "Clear or white",
+            "Yellow or green",
+            "Brown or rust-colored",
+            "Contains blood"
+          ],
+          "priority": 2,
+          "required": false,
+          "stage": "complaint_specific",
+          "ask_when": "CGH_001 == 'Coughing up phlegm/mucus'",
+          "applies_to": [
+            "cough"
+          ],
+          "branches": {
+            "Contains blood": "CGH_001b",
+            "default": "CGH_002"
+          },
+          "red_flag": null,
+          "rationale": "Assesses the nature of sputum, which can indicate the type and severity of respiratory infection.",
+          "clinical_review_status": "requires_clinical_review"
+        },
+        {
+          "id": "CGH_001b",
+          "text": "Are you coughing up small streaks of blood, or larger amounts of plain blood?",
+          "parameter": "hemoptysis",
+          "answer_type": "single_choice",
+          "options": [
+            "Small streaks mixed with phlegm",
+            "Larger amounts of plain blood"
+          ],
+          "priority": 1,
+          "required": false,
+          "stage": "complaint_specific",
+          "ask_when": "CGH_001a == 'Contains blood'",
+          "applies_to": [
+            "cough"
+          ],
+          "branches": {
+            "default": "CGH_002"
+          },
+          "red_flag": {
+            "is_red_flag": true,
+            "trigger_answers": [
+              "Larger amounts of plain blood"
+            ],
+            "action": "urgent_triage",
+            "rationale": "Gross hemoptysis carries high risk for massive airway bleeding and requires urgent medical attention.",
+            "clinical_review_status": "requires_clinical_review"
+          },
+          "rationale": "Differentiates minor mucosal irritation from significant pulmonary hemorrhage.",
+          "clinical_review_status": "requires_clinical_review"
+        },
+        {
+          "id": "CGH_002",
+          "text": "Have you had unexplained weight loss or severe night sweats along with this cough?",
+          "parameter": "associated_symptom_systemic",
+          "answer_type": "yes_no_unknown",
+          "options": [
+            "yes",
+            "no"
+          ],
+          "priority": 1,
+          "required": true,
+          "stage": "complaint_specific",
+          "ask_when": "always",
+          "applies_to": [
+            "cough"
+          ],
+          "branches": {
+            "default": "END"
+          },
+          "red_flag": {
+            "is_red_flag": true,
+            "trigger_answers": [
+              "yes"
+            ],
+            "action": "priority_evaluation",
+            "rationale": "Presence of chronic systemic symptoms with cough requires expedited evaluation for chronic infectious or malignant risk.",
+            "clinical_review_status": "requires_clinical_review"
+          },
+          "rationale": "Screens for systemic signs suggestive of serious chronic infections or systemic illness.",
+          "clinical_review_status": "requires_clinical_review"
+        }
+      ]
+    },
+    {
+      "complaint_id": "palpitations",
+      "complaint_name": "Palpitations",
+      "parameters_covered": [
+        "palpitation_pattern",
+        "associated_symptom_syncope",
+        "associated_symptom_chest_pain"
+      ],
+      "clinical_review_status": "requires_clinical_review",
+      "questions": [
+        {
+          "id": "PAL_001",
+          "text": "How do the heart flutters feel?",
+          "parameter": "palpitation_pattern",
+          "answer_type": "single_choice",
+          "options": [
+            "Like my heart is beating very fast",
+            "Like my heart is skipping a beat",
+            "Like my heart is pounding very hard"
+          ],
+          "priority": 2,
+          "required": true,
+          "stage": "complaint_specific",
+          "ask_when": "always",
+          "applies_to": [
+            "palpitations"
+          ],
+          "branches": {
+            "default": "PAL_002"
+          },
+          "red_flag": null,
+          "rationale": "Helps differentiate between potential tachyarrhythmias, premature contractions, and hyperdynamic states.",
+          "clinical_review_status": "requires_clinical_review"
+        },
+        {
+          "id": "PAL_002",
+          "text": "Have you fainted, passed out, or felt very close to passing out during these episodes?",
+          "parameter": "associated_symptom_syncope",
+          "answer_type": "yes_no_unknown",
+          "options": [
+            "yes",
+            "no"
+          ],
+          "priority": 1,
+          "required": true,
+          "stage": "complaint_specific",
+          "ask_when": "always",
+          "applies_to": [
+            "palpitations"
+          ],
+          "branches": {
+            "default": "PAL_003"
+          },
+          "red_flag": {
+            "is_red_flag": true,
+            "trigger_answers": [
+              "yes"
+            ],
+            "action": "urgent_triage",
+            "rationale": "Syncope or near-syncope with palpitations heavily indicates a hemodynamically unstable arrhythmia requiring immediate evaluation.",
+            "clinical_review_status": "requires_clinical_review"
+          },
+          "rationale": "Assesses for critical cerebral hypoperfusion secondary to cardiac arrhythmias.",
+          "clinical_review_status": "requires_clinical_review"
+        },
+        {
+          "id": "PAL_003",
+          "text": "Do you experience chest pain while your heart is fluttering?",
+          "parameter": "associated_symptom_chest_pain",
+          "answer_type": "yes_no_unknown",
+          "options": [
+            "yes",
+            "no"
+          ],
+          "priority": 1,
+          "required": true,
+          "stage": "complaint_specific",
+          "ask_when": "always",
+          "applies_to": [
+            "palpitations"
+          ],
+          "branches": {
+            "default": "END"
+          },
+          "red_flag": {
+            "is_red_flag": true,
+            "trigger_answers": [
+              "yes"
+            ],
+            "action": "urgent_triage",
+            "rationale": "Palpitations combined with chest pain signify a high risk for acute myocardial ischemia or significant structural strain.",
+            "clinical_review_status": "requires_clinical_review"
+          },
+          "rationale": "Screens for concurrent ischemic risk associated with arrhythmias.",
+          "clinical_review_status": "requires_clinical_review"
+        }
+      ]
+    },
+    {
+      "complaint_id": "abdominal_pain",
+      "complaint_name": "Abdominal Pain",
+      "parameters_covered": [
+        "symptom_onset",
+        "symptom_location",
+        "associated_symptom_bleeding",
+        "associated_symptom_fever"
+      ],
+      "clinical_review_status": "requires_clinical_review",
+      "questions": [
+        {
+          "id": "ABD_001",
+          "text": "Did the pain start suddenly (like a light switch) and become severe almost immediately?",
+          "parameter": "symptom_onset",
+          "answer_type": "yes_no_unknown",
+          "options": [
+            "yes",
+            "no"
+          ],
+          "priority": 1,
+          "required": true,
+          "stage": "complaint_specific",
+          "ask_when": "always",
+          "applies_to": [
+            "abdominal_pain"
+          ],
+          "branches": {
+            "default": "ABD_002"
+          },
+          "red_flag": {
+            "is_red_flag": true,
+            "trigger_answers": [
+              "yes"
+            ],
+            "action": "urgent_triage",
+            "rationale": "Sudden, severe abdominal pain carries a high risk for hollow viscus perforation, ischemia, or rupture.",
+            "clinical_review_status": "requires_clinical_review"
+          },
+          "rationale": "Differentiates acute surgical emergencies from progressive or chronic conditions.",
+          "clinical_review_status": "requires_clinical_review"
+        },
+        {
+          "id": "ABD_002",
+          "text": "Where is the pain worst?",
+          "parameter": "symptom_location",
+          "answer_type": "single_choice",
+          "options": [
+            "Upper right",
+            "Upper left",
+            "Lower right",
+            "Lower left",
+            "All over / Middle"
+          ],
+          "priority": 1,
+          "required": true,
+          "stage": "complaint_specific",
+          "ask_when": "always",
+          "applies_to": [
+            "abdominal_pain"
+          ],
+          "branches": {
+            "default": "ABD_003"
+          },
+          "red_flag": null,
+          "rationale": "Localizes the pain to help narrow down the affected organ system (e.g., biliary, appendiceal, diverticular).",
+          "clinical_review_status": "requires_clinical_review"
+        },
+        {
+          "id": "ABD_003",
+          "text": "Have you noticed any blood in your stool, or have your stools been pitch black and tarry?",
+          "parameter": "associated_symptom_bleeding",
+          "answer_type": "yes_no_unknown",
+          "options": [
+            "yes",
+            "no"
+          ],
+          "priority": 1,
+          "required": true,
+          "stage": "complaint_specific",
+          "ask_when": "always",
+          "applies_to": [
+            "abdominal_pain"
+          ],
+          "branches": {
+            "default": "ABD_004"
+          },
+          "red_flag": {
+            "is_red_flag": true,
+            "trigger_answers": [
+              "yes"
+            ],
+            "action": "urgent_triage",
+            "rationale": "Indicates high risk of significant gastrointestinal bleeding requiring prompt evaluation.",
+            "clinical_review_status": "requires_clinical_review"
+          },
+          "rationale": "Screens for lower or upper GI tract hemorrhage.",
+          "clinical_review_status": "requires_clinical_review"
+        },
+        {
+          "id": "ABD_004",
+          "text": "Do you also have a high fever with chills or shivering?",
+          "parameter": "associated_symptom_fever",
+          "answer_type": "yes_no_unknown",
+          "options": [
+            "yes",
+            "no"
+          ],
+          "priority": 2,
+          "required": true,
+          "stage": "complaint_specific",
+          "ask_when": "always",
+          "applies_to": [
+            "abdominal_pain"
+          ],
+          "branches": {
+            "default": "END"
+          },
+          "red_flag": null,
+          "rationale": "Assesses for infectious or inflammatory processes like cholecystitis, appendicitis, or pelvic inflammatory disease.",
+          "clinical_review_status": "requires_clinical_review"
+        }
+      ]
+    },
+    {
+      "complaint_id": "nausea_vomiting",
+      "complaint_name": "Nausea / Vomiting",
+      "parameters_covered": [
+        "vomitus_content",
+        "hydration_status"
+      ],
+      "clinical_review_status": "requires_clinical_review",
+      "questions": [
+        {
+          "id": "VOM_001",
+          "text": "Are you vomiting blood or material that looks like dark coffee grounds?",
+          "parameter": "vomitus_content",
+          "answer_type": "yes_no_unknown",
+          "options": [
+            "yes",
+            "no"
+          ],
+          "priority": 1,
+          "required": true,
+          "stage": "complaint_specific",
+          "ask_when": "always",
+          "applies_to": [
+            "nausea_vomiting"
+          ],
+          "branches": {
+            "default": "VOM_002"
+          },
+          "red_flag": {
+            "is_red_flag": true,
+            "trigger_answers": [
+              "yes"
+            ],
+            "action": "urgent_triage",
+            "rationale": "Hematemesis indicates upper GI bleeding, which can rapidly become hemodynamically compromising.",
+            "clinical_review_status": "requires_clinical_review"
+          },
+          "rationale": "Screens for active upper gastrointestinal bleeding.",
+          "clinical_review_status": "requires_clinical_review"
+        },
+        {
+          "id": "VOM_002",
+          "text": "Are you able to keep any liquids down, or do you vomit everything you drink?",
+          "parameter": "hydration_status",
+          "answer_type": "single_choice",
+          "options": [
+            "I can keep some liquids down",
+            "I vomit everything"
+          ],
+          "priority": 1,
+          "required": true,
+          "stage": "complaint_specific",
+          "ask_when": "always",
+          "applies_to": [
+            "nausea_vomiting"
+          ],
+          "branches": {
+            "default": "END"
+          },
+          "red_flag": null,
+          "rationale": "Assesses the patient's risk for severe dehydration and electrolyte imbalance.",
+          "clinical_review_status": "requires_clinical_review"
+        }
+      ]
+    },
+    {
+      "complaint_id": "diarrhea",
+      "complaint_name": "Diarrhea",
+      "parameters_covered": [
+        "stool_characteristics",
+        "hydration_signs"
+      ],
+      "clinical_review_status": "requires_clinical_review",
+      "questions": [
+        {
+          "id": "DIA_001",
+          "text": "Is there visible blood or a lot of mucus in your diarrhea?",
+          "parameter": "stool_characteristics",
+          "answer_type": "yes_no_unknown",
+          "options": [
+            "yes",
+            "no"
+          ],
+          "priority": 1,
+          "required": true,
+          "stage": "complaint_specific",
+          "ask_when": "always",
+          "applies_to": [
+            "diarrhea"
+          ],
+          "branches": {
+            "default": "DIA_002"
+          },
+          "red_flag": {
+            "is_red_flag": true,
+            "trigger_answers": [
+              "yes"
+            ],
+            "action": "priority_evaluation",
+            "rationale": "Bloody diarrhea (dysentery) carries a higher risk of invasive bacterial infection, ischemia, or inflammatory bowel disease flares.",
+            "clinical_review_status": "requires_clinical_review"
+          },
+          "rationale": "Differentiates simple viral/secretory gastroenteritis from inflammatory or invasive causes.",
+          "clinical_review_status": "requires_clinical_review"
+        },
+        {
+          "id": "DIA_002",
+          "text": "Are you feeling extremely dizzy when you stand up, or have you stopped passing urine?",
+          "parameter": "hydration_signs",
+          "answer_type": "yes_no_unknown",
+          "options": [
+            "yes",
+            "no"
+          ],
+          "priority": 1,
+          "required": true,
+          "stage": "complaint_specific",
+          "ask_when": "always",
+          "applies_to": [
+            "diarrhea"
+          ],
+          "branches": {
+            "default": "END"
+          },
+          "red_flag": {
+            "is_red_flag": true,
+            "trigger_answers": [
+              "yes"
+            ],
+            "action": "urgent_triage",
+            "rationale": "Orthostasis or anuria indicates profound volume depletion risking acute kidney injury and shock.",
+            "clinical_review_status": "requires_clinical_review"
+          },
+          "rationale": "Screens for severe hemodynamic impact from fluid loss.",
+          "clinical_review_status": "requires_clinical_review"
+        }
+      ]
+    },
+    {
+      "complaint_id": "headache",
+      "complaint_name": "Headache",
+      "parameters_covered": [
+        "onset_speed",
+        "associated_symptom_neuro",
+        "associated_symptom_systemic"
+      ],
+      "clinical_review_status": "requires_clinical_review",
+      "questions": [
+        {
+          "id": "HA_001",
+          "text": "Did this headache hit its absolute worst pain within seconds to minutes (like a clap of thunder)?",
+          "parameter": "onset_speed",
+          "answer_type": "yes_no_unknown",
+          "options": [
+            "yes",
+            "no"
+          ],
+          "priority": 1,
+          "required": true,
+          "stage": "complaint_specific",
+          "ask_when": "always",
+          "applies_to": [
+            "headache"
+          ],
+          "branches": {
+            "default": "HA_002"
+          },
+          "red_flag": {
+            "is_red_flag": true,
+            "trigger_answers": [
+              "yes"
+            ],
+            "action": "urgent_triage",
+            "rationale": "A thunderclap headache is a classic indicator of high-risk intracranial vascular events (e.g., subarachnoid hemorrhage).",
+            "clinical_review_status": "requires_clinical_review"
+          },
+          "rationale": "Screens for acute hemorrhagic stroke or vascular catastrophes.",
+          "clinical_review_status": "requires_clinical_review"
+        },
+        {
+          "id": "HA_002",
+          "text": "Along with the headache, do you have any new weakness in your face/arms/legs, trouble speaking, or changes in your vision?",
+          "parameter": "associated_symptom_neuro",
+          "answer_type": "yes_no_unknown",
+          "options": [
+            "yes",
+            "no"
+          ],
+          "priority": 1,
+          "required": true,
+          "stage": "complaint_specific",
+          "ask_when": "always",
+          "applies_to": [
+            "headache"
+          ],
+          "branches": {
+            "default": "HA_003"
+          },
+          "red_flag": {
+            "is_red_flag": true,
+            "trigger_answers": [
+              "yes"
+            ],
+            "action": "urgent_triage",
+            "rationale": "Focal neurological deficits accompanying a headache suggest stroke, mass lesion, or complicated migraine requiring urgent scanning.",
+            "clinical_review_status": "requires_clinical_review"
+          },
+          "rationale": "Evaluates for concurrent focal cortical or brainstem dysfunction.",
+          "clinical_review_status": "requires_clinical_review"
+        },
+        {
+          "id": "HA_003",
+          "text": "Do you also have a high fever AND a very stiff neck (difficulty touching your chin to your chest)?",
+          "parameter": "associated_symptom_systemic",
+          "answer_type": "yes_no_unknown",
+          "options": [
+            "yes",
+            "no"
+          ],
+          "priority": 1,
+          "required": true,
+          "stage": "complaint_specific",
+          "ask_when": "always",
+          "applies_to": [
+            "headache"
+          ],
+          "branches": {
+            "default": "END"
+          },
+          "red_flag": {
+            "is_red_flag": true,
+            "trigger_answers": [
+              "yes"
+            ],
+            "action": "urgent_triage",
+            "rationale": "The triad of headache, fever, and neck stiffness is a strong clinical marker for meningitis/encephalitis.",
+            "clinical_review_status": "requires_clinical_review"
+          },
+          "rationale": "Screens for central nervous system infections.",
+          "clinical_review_status": "requires_clinical_review"
+        }
+      ]
+    },
+    {
+      "complaint_id": "dizziness",
+      "complaint_name": "Dizziness",
+      "parameters_covered": [
+        "dizziness_type",
+        "associated_symptom_neuro"
+      ],
+      "clinical_review_status": "requires_clinical_review",
+      "questions": [
+        {
+          "id": "DIZ_001",
+          "text": "Does it feel like the room is spinning (vertigo), or does it feel like you are going to faint (lightheaded)?",
+          "parameter": "dizziness_type",
+          "answer_type": "single_choice",
+          "options": [
+            "Room is spinning",
+            "Feel like fainting",
+            "Off-balance / wobbly"
+          ],
+          "priority": 1,
+          "required": true,
+          "stage": "complaint_specific",
+          "ask_when": "always",
+          "applies_to": [
+            "dizziness"
+          ],
+          "branches": {
+            "default": "DIZ_002"
+          },
+          "red_flag": null,
+          "rationale": "Categorizes dizziness to distinguish between vestibular, cardiovascular, and neurological etiologies.",
+          "clinical_review_status": "requires_clinical_review"
+        },
+        {
+          "id": "DIZ_002",
+          "text": "Do you have any slurred speech, double vision, trouble swallowing, or weakness on one side of your body?",
+          "parameter": "associated_symptom_neuro",
+          "answer_type": "yes_no_unknown",
+          "options": [
+            "yes",
+            "no"
+          ],
+          "priority": 1,
+          "required": true,
+          "stage": "complaint_specific",
+          "ask_when": "always",
+          "applies_to": [
+            "dizziness"
+          ],
+          "branches": {
+            "default": "END"
+          },
+          "red_flag": {
+            "is_red_flag": true,
+            "trigger_answers": [
+              "yes"
+            ],
+            "action": "urgent_triage",
+            "rationale": "Dizziness combined with brainstem signs indicates high risk for posterior circulation stroke.",
+            "clinical_review_status": "requires_clinical_review"
+          },
+          "rationale": "Screens for central causes of dizziness.",
+          "clinical_review_status": "requires_clinical_review"
+        }
+      ]
+    },
+    {
+      "complaint_id": "back_pain",
+      "complaint_name": "Back Pain",
+      "parameters_covered": [
+        "associated_symptom_neuropathic",
+        "red_flag_cauda_equina",
+        "trauma_history"
+      ],
+      "clinical_review_status": "requires_clinical_review",
+      "questions": [
+        {
+          "id": "BP_001",
+          "text": "Does the pain shoot down past your knee into your calf or foot?",
+          "parameter": "associated_symptom_neuropathic",
+          "answer_type": "yes_no_unknown",
+          "options": [
+            "yes",
+            "no"
+          ],
+          "priority": 2,
+          "required": true,
+          "stage": "complaint_specific",
+          "ask_when": "always",
+          "applies_to": [
+            "back_pain"
+          ],
+          "branches": {
+            "default": "BP_002"
+          },
+          "red_flag": null,
+          "rationale": "Assesses for radiculopathy (nerve root compression).",
+          "clinical_review_status": "requires_clinical_review"
+        },
+        {
+          "id": "BP_002",
+          "text": "Have you lost control of your bowel or bladder, or do you have numbness around your groin/genitals?",
+          "parameter": "red_flag_cauda_equina",
+          "answer_type": "yes_no_unknown",
+          "options": [
+            "yes",
+            "no"
+          ],
+          "priority": 1,
+          "required": true,
+          "stage": "complaint_specific",
+          "ask_when": "always",
+          "applies_to": [
+            "back_pain"
+          ],
+          "branches": {
+            "default": "BP_003"
+          },
+          "red_flag": {
+            "is_red_flag": true,
+            "trigger_answers": [
+              "yes"
+            ],
+            "action": "urgent_triage",
+            "rationale": "These are classic signs of Cauda Equina syndrome, requiring emergent surgical decompression to prevent permanent paralysis.",
+            "clinical_review_status": "requires_clinical_review"
+          },
+          "rationale": "Critical screening for distal spinal cord compression.",
+          "clinical_review_status": "requires_clinical_review"
+        },
+        {
+          "id": "BP_003",
+          "text": "Did this pain start after a significant fall or accident?",
+          "parameter": "trauma_history",
+          "answer_type": "yes_no_unknown",
+          "options": [
+            "yes",
+            "no"
+          ],
+          "priority": 1,
+          "required": true,
+          "stage": "complaint_specific",
+          "ask_when": "always",
+          "applies_to": [
+            "back_pain"
+          ],
+          "branches": {
+            "default": "END"
+          },
+          "red_flag": null,
+          "rationale": "Identifies potential for acute structural fracture or traumatic injury.",
+          "clinical_review_status": "requires_clinical_review"
+        }
+      ]
+    },
+    {
+      "complaint_id": "urinary_symptoms",
+      "complaint_name": "Urinary Symptoms",
+      "parameters_covered": [
+        "symptom_type",
+        "associated_symptom_hematuria",
+        "associated_symptom_systemic"
+      ],
+      "clinical_review_status": "requires_clinical_review",
+      "questions": [
+        {
+          "id": "URI_001",
+          "text": "What urinary problems are you having?",
+          "parameter": "symptom_type",
+          "answer_type": "multiple_choice",
+          "options": [
+            "Burning or pain when urinating",
+            "Needing to go very frequently",
+            "Difficulty starting flow",
+            "Leaking urine"
+          ],
+          "priority": 1,
+          "required": true,
+          "stage": "complaint_specific",
+          "ask_when": "always",
+          "applies_to": [
+            "urinary_symptoms"
+          ],
+          "branches": {
+            "default": "URI_002"
+          },
+          "red_flag": null,
+          "rationale": "Categorizes the lower urinary tract symptoms (LUTS).",
+          "clinical_review_status": "requires_clinical_review"
+        },
+        {
+          "id": "URI_002",
+          "text": "Is there visible red blood in your urine?",
+          "parameter": "associated_symptom_hematuria",
+          "answer_type": "yes_no_unknown",
+          "options": [
+            "yes",
+            "no"
+          ],
+          "priority": 1,
+          "required": true,
+          "stage": "complaint_specific",
+          "ask_when": "always",
+          "applies_to": [
+            "urinary_symptoms"
+          ],
+          "branches": {
+            "default": "URI_003"
+          },
+          "red_flag": {
+            "is_red_flag": true,
+            "trigger_answers": [
+              "yes"
+            ],
+            "action": "priority_evaluation",
+            "rationale": "Gross hematuria requires evaluation for malignancy, severe infection, or stones.",
+            "clinical_review_status": "requires_clinical_review"
+          },
+          "rationale": "Screens for gross hematuria.",
+          "clinical_review_status": "requires_clinical_review"
+        },
+        {
+          "id": "URI_003",
+          "text": "Do you have a high fever with severe pain in your mid-to-lower back (flank)?",
+          "parameter": "associated_symptom_systemic",
+          "answer_type": "yes_no_unknown",
+          "options": [
+            "yes",
+            "no"
+          ],
+          "priority": 1,
+          "required": true,
+          "stage": "complaint_specific",
+          "ask_when": "always",
+          "applies_to": [
+            "urinary_symptoms"
+          ],
+          "branches": {
+            "default": "END"
+          },
+          "red_flag": {
+            "is_red_flag": true,
+            "trigger_answers": [
+              "yes"
+            ],
+            "action": "urgent_triage",
+            "rationale": "Fever and flank pain indicate upper urinary tract involvement (pyelonephritis or obstructing stone with infection), which can rapidly lead to sepsis.",
+            "clinical_review_status": "requires_clinical_review"
+          },
+          "rationale": "Differentiates simple cystitis from ascending kidney infections.",
+          "clinical_review_status": "requires_clinical_review"
+        }
+      ]
+    },
+    {
+      "complaint_id": "menstrual_problems",
+      "complaint_name": "Menstrual Problems",
+      "parameters_covered": [
+        "bleeding_severity",
+        "pregnancy_risk"
+      ],
+      "clinical_review_status": "requires_clinical_review",
+      "questions": [
+        {
+          "id": "MEN_001",
+          "text": "Are you soaking through a pad or tampon every hour for more than two hours?",
+          "parameter": "bleeding_severity",
+          "answer_type": "yes_no_unknown",
+          "options": [
+            "yes",
+            "no"
+          ],
+          "priority": 1,
+          "required": true,
+          "stage": "complaint_specific",
+          "ask_when": "always",
+          "applies_to": [
+            "menstrual_problems"
+          ],
+          "branches": {
+            "default": "MEN_002"
+          },
+          "red_flag": {
+            "is_red_flag": true,
+            "trigger_answers": [
+              "yes"
+            ],
+            "action": "urgent_triage",
+            "rationale": "Severe menorrhagia can lead to rapid hemodynamic instability.",
+            "clinical_review_status": "requires_clinical_review"
+          },
+          "rationale": "Quantifies the risk of acute severe blood loss.",
+          "clinical_review_status": "requires_clinical_review"
+        },
+        {
+          "id": "MEN_002",
+          "text": "Is it possible you could be pregnant, and are you having sudden severe pelvic pain?",
+          "parameter": "pregnancy_risk",
+          "answer_type": "yes_no_unknown",
+          "options": [
+            "yes",
+            "no"
+          ],
+          "priority": 1,
+          "required": true,
+          "stage": "complaint_specific",
+          "ask_when": "always",
+          "applies_to": [
+            "menstrual_problems"
+          ],
+          "branches": {
+            "default": "END"
+          },
+          "red_flag": {
+            "is_red_flag": true,
+            "trigger_answers": [
+              "yes"
+            ],
+            "action": "urgent_triage",
+            "rationale": "Sudden pelvic pain in a potentially pregnant patient carries high risk for an ectopic pregnancy rupture, a surgical emergency.",
+            "clinical_review_status": "requires_clinical_review"
+          },
+          "rationale": "Critical screening for ectopic pregnancy.",
+          "clinical_review_status": "requires_clinical_review"
+        }
+      ]
+    },
+    {
+      "complaint_id": "fever",
+      "complaint_name": "Fever",
+      "parameters_covered": [
+        "fever_duration",
+        "associated_symptom_mental_status",
+        "associated_symptom_rash"
+      ],
+      "clinical_review_status": "requires_clinical_review",
+      "questions": [
+        {
+          "id": "FEV_001",
+          "text": "How many days have you had the fever?",
+          "parameter": "fever_duration",
+          "answer_type": "integer",
+          "options": [],
+          "priority": 2,
+          "required": true,
+          "stage": "complaint_specific",
+          "ask_when": "always",
+          "applies_to": [
+            "fever"
+          ],
+          "branches": {
+            "default": "FEV_002"
+          },
+          "red_flag": null,
+          "rationale": "Differentiates acute self-limiting fevers from prolonged fevers of unknown origin.",
+          "clinical_review_status": "requires_clinical_review"
+        },
+        {
+          "id": "FEV_002",
+          "text": "Has the person with the fever become extremely confused, hard to wake up, or unusually lethargic?",
+          "parameter": "associated_symptom_mental_status",
+          "answer_type": "yes_no_unknown",
+          "options": [
+            "yes",
+            "no"
+          ],
+          "priority": 1,
+          "required": true,
+          "stage": "complaint_specific",
+          "ask_when": "always",
+          "applies_to": [
+            "fever"
+          ],
+          "branches": {
+            "default": "FEV_003"
+          },
+          "red_flag": {
+            "is_red_flag": true,
+            "trigger_answers": [
+              "yes"
+            ],
+            "action": "urgent_triage",
+            "rationale": "Altered mental status with fever indicates high risk for severe systemic sepsis or central nervous system infection.",
+            "clinical_review_status": "requires_clinical_review"
+          },
+          "rationale": "Evaluates end-organ perfusion and brain involvement.",
+          "clinical_review_status": "requires_clinical_review"
+        },
+        {
+          "id": "FEV_003",
+          "text": "Is there a new rash that does not fade or disappear when you press on it with a glass?",
+          "parameter": "associated_symptom_rash",
+          "answer_type": "yes_no_unknown",
+          "options": [
+            "yes",
+            "no"
+          ],
+          "priority": 1,
+          "required": true,
+          "stage": "complaint_specific",
+          "ask_when": "always",
+          "applies_to": [
+            "fever"
+          ],
+          "branches": {
+            "default": "END"
+          },
+          "red_flag": {
+            "is_red_flag": true,
+            "trigger_answers": [
+              "yes"
+            ],
+            "action": "urgent_triage",
+            "rationale": "A non-blanching purpuric/petechial rash with fever is a hallmark of meningococcal septicemia or other critical coagulopathies.",
+            "clinical_review_status": "requires_clinical_review"
+          },
+          "rationale": "Screens for critical bacterial septicemia.",
+          "clinical_review_status": "requires_clinical_review"
+        }
+      ]
+    },
+    {
+      "complaint_id": "swelling_edema",
+      "complaint_name": "Swelling / Edema",
+      "parameters_covered": [
+        "swelling_location",
+        "associated_symptom_pain"
+      ],
+      "clinical_review_status": "requires_clinical_review",
+      "questions": [
+        {
+          "id": "SWE_001",
+          "text": "Is the swelling in just one arm/leg, or is it on both sides of your body equally?",
+          "parameter": "swelling_location",
+          "answer_type": "single_choice",
+          "options": [
+            "Just one side",
+            "Both sides equally"
+          ],
+          "priority": 1,
+          "required": true,
+          "stage": "complaint_specific",
+          "ask_when": "always",
+          "applies_to": [
+            "swelling_edema"
+          ],
+          "branches": {
+            "Just one side": "SWE_001a",
+            "default": "END"
+          },
+          "red_flag": null,
+          "rationale": "Differentiates systemic causes (heart, liver, kidney) from localized causes (DVT, cellulitis).",
+          "clinical_review_status": "requires_clinical_review"
+        },
+        {
+          "id": "SWE_001a",
+          "text": "Is the swollen limb also painful, red, and warm to the touch?",
+          "parameter": "associated_symptom_pain",
+          "answer_type": "yes_no_unknown",
+          "options": [
+            "yes",
+            "no"
+          ],
+          "priority": 1,
+          "required": false,
+          "stage": "complaint_specific",
+          "ask_when": "SWE_001 == 'Just one side'",
+          "applies_to": [
+            "swelling_edema"
+          ],
+          "branches": {
+            "default": "END"
+          },
+          "red_flag": {
+            "is_red_flag": true,
+            "trigger_answers": [
+              "yes"
+            ],
+            "action": "priority_evaluation",
+            "rationale": "Unilateral painful, red swelling raises concern for Deep Vein Thrombosis (DVT) or severe cellulitis.",
+            "clinical_review_status": "requires_clinical_review"
+          },
+          "rationale": "Screens for acute thromboembolic or severe infectious processes.",
+          "clinical_review_status": "requires_clinical_review"
+        }
+      ]
+    },
+    {
+      "complaint_id": "eye_complaints",
+      "complaint_name": "Eye Complaints",
+      "parameters_covered": [
+        "vision_changes",
+        "pain_severity"
+      ],
+      "clinical_review_status": "requires_clinical_review",
+      "questions": [
+        {
+          "id": "EYE_001",
+          "text": "Have you experienced any sudden loss of vision, or severe blurring that doesn't go away with blinking?",
+          "parameter": "vision_changes",
+          "answer_type": "yes_no_unknown",
+          "options": [
+            "yes",
+            "no"
+          ],
+          "priority": 1,
+          "required": true,
+          "stage": "complaint_specific",
+          "ask_when": "always",
+          "applies_to": [
+            "eye_complaints"
+          ],
+          "branches": {
+            "default": "EYE_002"
+          },
+          "red_flag": {
+            "is_red_flag": true,
+            "trigger_answers": [
+              "yes"
+            ],
+            "action": "urgent_triage",
+            "rationale": "Sudden vision loss implies optic nerve compromise, retinal detachment, or acute vascular occlusion requiring emergency ophthalmologic care.",
+            "clinical_review_status": "requires_clinical_review"
+          },
+          "rationale": "Screens for sight-threatening pathology.",
+          "clinical_review_status": "requires_clinical_review"
+        },
+        {
+          "id": "EYE_002",
+          "text": "Is the eye severely painful, especially when looking at bright lights?",
+          "parameter": "pain_severity",
+          "answer_type": "yes_no_unknown",
+          "options": [
+            "yes",
+            "no"
+          ],
+          "priority": 2,
+          "required": true,
+          "stage": "complaint_specific",
+          "ask_when": "always",
+          "applies_to": [
+            "eye_complaints"
+          ],
+          "branches": {
+            "default": "END"
+          },
+          "red_flag": null,
+          "rationale": "Helps distinguish superficial issues like conjunctivitis from deep ocular inflammation like uveitis or acute glaucoma.",
+          "clinical_review_status": "requires_clinical_review"
+        }
+      ]
+    }
+  ]
+}
